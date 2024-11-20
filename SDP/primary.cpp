@@ -34,6 +34,7 @@ class Button{
                     image.Draw(xPos, yPos);
                     return false;
                 }else{
+                    clicked = false;
                     return true;
                 }
                 
@@ -261,20 +262,47 @@ int main()
             }
 
 
-        }else if(screen == 2){
+        }else if(screen == 2){ // stats
             // background
             LCD.SetFontColor(LIGHTPINK);
             LCD.FillRectangle(0,0,319,239);
+
+            // add text
+
+            float x_pos;
+            float y_pos;
+
+            if(LCD.Touch(&x_pos, &y_pos)){
+                screen = 1;
+            }
             
-        }else if(screen == 3){
+        }else if(screen == 3){ // credits
             // background
             LCD.SetFontColor(LIGHTGOLDENRODYELLOW);
             LCD.FillRectangle(0,0,319,239);
+
+            float x_pos;
+            float y_pos;
+
+            // add text
+
+            if(LCD.Touch(&x_pos, &y_pos)){
+                screen = 1;
+            }
             
-        }else if(screen == 4){
+        }else if(screen == 4){ // info
             // background
             LCD.SetFontColor(LIGHTGREEN);
             LCD.FillRectangle(0,0,319,239);
+
+            float x_pos;
+            float y_pos;
+
+            // add text
+
+            if(LCD.Touch(&x_pos, &y_pos)){
+                screen = 1;
+            }
             
         }
         
