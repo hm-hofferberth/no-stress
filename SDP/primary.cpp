@@ -41,7 +41,7 @@ class Button{
         }
 
         void draw(float xClicked, float yClicked){
-            if((xPos - xClicked) < xSize && (xClicked) < xPos + xSize && (yPos - yClicked) < ySize && (yClicked) < yPos + ySize){
+            if(xClicked > xPos && xClicked < (xPos+xSize) && yClicked > yPos && yClicked < (yPos+ySize)){
                 clickedImage.Draw(xPos, yPos);
                 clicked = true;
             }else{
@@ -147,9 +147,9 @@ int main()
 
     // Variables for the menu
     Button startButton("Buttons/sprite_0.png", "Buttons/sprite_1.png", 90, 150, 60, 15, 5);
-    Button statsButton("Buttons/sprite_2.png", "Buttons/sprite_3.png", 65, 190, 60, 15, 5);
-    Button creditsButton("Buttons/sprite_4.png", "Buttons/sprite_5.png", 160, 190, 60, 15, 5);
-    Button infoButton("Buttons/sprite_6.png", "Buttons/sprite_7.png", 160, 150, 60, 15, 5);
+    Button statsButton("Buttons/sprite_2.png", "Buttons/sprite_3.png", 65, 190, 60, 15, 2);
+    Button creditsButton("Buttons/sprite_4.png", "Buttons/sprite_5.png", 160, 190, 60, 15, 3);
+    Button infoButton("Buttons/sprite_6.png", "Buttons/sprite_7.png", 160, 150, 60, 15, 4);
 
 
     // Variables for the game
@@ -261,6 +261,21 @@ int main()
             }
 
 
+        }else if(screen == 2){
+            // background
+            LCD.SetFontColor(LIGHTPINK);
+            LCD.FillRectangle(0,0,319,239);
+            
+        }else if(screen == 3){
+            // background
+            LCD.SetFontColor(LIGHTGOLDENRODYELLOW);
+            LCD.FillRectangle(0,0,319,239);
+            
+        }else if(screen == 4){
+            // background
+            LCD.SetFontColor(LIGHTGREEN);
+            LCD.FillRectangle(0,0,319,239);
+            
         }
         
 
