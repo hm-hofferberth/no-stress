@@ -1,5 +1,6 @@
 #include "FEHLCD.h"
 #include "FEHImages.h"
+#include "FEHRandom.h"
 #define JUMPSPEED 0.06
 
 class Button{
@@ -97,9 +98,15 @@ class Ground{
     public:
         float position;
         FEHImage image;
-        void openImage(char imageName []){
+        
+        Ground(char imageName []){
             image.Open(imageName);
         }
+
+         void openImage(char imageName []){
+            image.Open(imageName);
+        }
+
         void drawGround(){
             image.Draw(position,0);
         }
@@ -108,7 +115,53 @@ class Ground{
 };
 
 class Obstacle{
+    public:
+        float xPos;
+        float yPos;
+        bool generated = false;
+        FEHImage image;
+        
+        Obstacle(){
+            image.Open("obstacles/AlarmClock.png");
+            xPos = 400;
+            yPos = 0;
+        }
 
+        Obstacle(char img[]){
+            image.Open(img);
+            xPos = 0;
+            yPos = 0;
+        }
+
+        void draw(){
+                image.Draw(xPos, yPos);
+            
+        }
+};
+
+class Object{
+    public:
+        float xPos;
+        float yPos;
+        bool generated = false;
+        FEHImage image;
+        
+        Object(){
+            image.Open("objects/Heart.png");
+            xPos = 400;
+            yPos = 0;
+        }
+
+        Object(char img[]){
+            image.Open(img);
+            xPos = 0;
+            yPos = 0;
+        }
+
+        void draw(){
+                image.Draw(xPos, yPos);
+            
+        }
 };
 
 class JumpBar{
@@ -126,8 +179,8 @@ class JumpBar{
             LCD.FillRectangle(xPos,yPos,totalX,totalY); 
         }
 
-        void increaseBar(){
-            if(innerX < 75){
+        void increaseBar(int max){
+            if(innerX < max){
                 innerX++;
             }
             
@@ -157,20 +210,32 @@ int main()
     Character player;
     player.changeCostume("character/sprite_00.png");
 
-    Ground ground1;
-    Ground ground2;
-    ground1.openImage("Ground-2.png.png");
-    ground2.openImage("Ground-2.png.png");
+    Ground ground1("Ground/Ground-1.png");
+    Ground ground2("Ground/Ground-2.png");
     ground1.position = 0;
     ground2.position = 320;
 
+    Obstacle currentObstacles[15];
+    Object currentObjects[15];
+    
+    char objectImages[2][30] = {"objects/Bed.png", "objects/Heart.png"};
+    char obstacleImages[6][30] = {"obstacles/AlarmClock.png",
+    "obstacles/Bill.png", "obstacles/Cell_Phone.png", "obstacles/Clock.png", 
+   "obstacles/Money.png", "obstacles/Thunder.png"};
+
     JumpBar bar;
+
+    int currObjectGenerated = 0;
+    int currObstacleGenerated = 0;
+    float lastGeneratedX = 100;
+    float lastObGeneratedX = 200;
+    float currGenerationDistance = 50;
+    float currObGenerationDistance = 350;
+    float currObstacleGenMax = 390;
 
     float timeHeld = 0;
     float moveSpeed = 0;
     int jumpLevel = 50;
-
-    float last_generated_x = 15;
     
     while (1) {
 
@@ -210,7 +275,7 @@ int main()
             }
 
             
-
+        // Actual game
         }else if(screen == 5){
             // background
             LCD.SetFontColor(LIGHTBLUE);
@@ -227,7 +292,8 @@ int main()
 
             if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 timeHeld++;
-                bar.increaseBar();
+                bar.increaseBar(75 - player.stressIndex);
+                player.changeCostume("Char_crouch/sprite_0_crouch.png");
             }else{
 
                 // Detecting jump status
@@ -237,12 +303,12 @@ int main()
                     jumpLevel = timeHeld;
                     jumpLevel -= player.stressIndex;
                     timeHeld = 0;
-                    moveSpeed = 2;
+                    moveSpeed = 1.5;
                     player.jumpIndex = 1;
                 }else if(player.jumpIndex != 0){
                     // Mid jump
                     player.transitionJump(jumpLevel);
-                    x_pos += moveSpeed;
+                    player.xPos += moveSpeed;
                     
                 }else{
                     // Jump is done
@@ -259,12 +325,90 @@ int main()
             ground1.position -= moveSpeed;
             ground2.position -= moveSpeed;
 
-            if(ground1.position <= -321){
+            if(ground1.position <= -320){
                 ground1.position = ground2.position+320;
+                ground1.openImage("Ground/Ground-1.png");
                 
             }
-            if(ground2.position <= -321){
+            if(ground2.position <= -320){
                 ground2.position = ground1.position+320;
+                ground2.openImage("Ground/Ground-2.png");
+                
+            }
+
+
+            // Change obstacle generation distance
+            if(currObstacleGenMax > 80){
+                currObstacleGenMax -= 0.05;
+            }
+
+            // Generate obstacles
+            
+            if(player.xPos - lastGeneratedX > currGenerationDistance){
+                currentObstacles[currObstacleGenerated].xPos = 350;
+                currentObstacles[currObstacleGenerated].yPos = 155;
+
+                int random = 6 * (Random.RandInt() / 32767.0);
+                currentObstacles[currObstacleGenerated].image = obstacleImages[random];
+                currentObstacles[currObstacleGenerated].generated = true;
+
+                if(currObstacleGenerated < 15){
+                    currObstacleGenerated++;
+                }else{
+                    currObstacleGenerated = 0;
+                }
+                
+                lastGeneratedX = player.xPos;
+
+                float randomDistance = currObstacleGenMax * (Random.RandInt() / 32767.0) + 40 + (currObstacleGenMax / 40);
+                currGenerationDistance = randomDistance;
+            }
+
+            //Generate objects
+            
+            if(player.xPos - lastObGeneratedX > currObGenerationDistance){
+                currentObjects[currObjectGenerated].xPos = 350;
+                currentObjects[currObjectGenerated].yPos = 155;
+
+                int random = 2 * (Random.RandInt() / 32767.0);
+                currentObjects[currObjectGenerated].image = objectImages[random];
+                currentObjects[currObjectGenerated].generated = true;
+
+                if(currObjectGenerated < 15){
+                    currObjectGenerated++;
+                }else{
+                    currObjectGenerated = 0;
+                }
+                
+                lastObGeneratedX = player.xPos;
+
+                float randomDistance = 500 * (Random.RandInt() / 32767.0) + 30;
+                currObGenerationDistance = randomDistance;
+            }
+
+
+            for(int i = 0; i < 15; i++){
+                if(currentObstacles[i].generated){
+                    currentObstacles[i].xPos -= moveSpeed;
+                    currentObstacles[i].draw();
+
+                    if(currentObstacles[i].xPos < -250){
+                        currentObstacles[i].generated = false;
+                    }
+                }
+                
+
+            }
+
+            for(int i = 0; i < 15; i++){
+                if(currentObjects[i].generated){
+                    currentObjects[i].xPos -= moveSpeed;
+                    currentObjects[i].draw();
+
+                    if(currentObjects[i].xPos < -250){
+                        currentObjects[i].generated = false;
+                    }
+                }
                 
             }
 
