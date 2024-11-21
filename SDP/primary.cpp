@@ -179,6 +179,13 @@ int main()
             LCD.SetFontColor(LIGHTBLUE);
             LCD.FillRectangle(0,0,319,239); 
 
+            // Declares an image for logo
+            FEHImage logo;
+            // Open the image
+            logo.Open("Logo-2.png.png");
+            // Draw the logo
+            logo.Draw(45, 10);
+
             float x_pos;
             float y_pos;
 
@@ -268,11 +275,17 @@ int main()
             LCD.FillRectangle(0,0,319,239);
 
             // add text
+            LCD.SetFontColor(MAROON);
+            LCD.WriteAt("High Score:",50,100);
+            LCD.WriteAt("9000",190,100);
+
+            LCD.SetFontColor(LIGHTCORAL);
+            LCD.WriteAt("Click anywhere to return",10,210);
 
             float x_pos;
             float y_pos;
 
-            if(LCD.Touch(&x_pos, &y_pos)){
+            if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
             }
             
@@ -281,12 +294,18 @@ int main()
             LCD.SetFontColor(LIGHTGOLDENRODYELLOW);
             LCD.FillRectangle(0,0,319,239);
 
+            // add text
+            LCD.SetFontColor(BROWN);
+            LCD.WriteAt("An Escaping",100,20);
+            LCD.WriteAt("Meatball Production",50,40);
+
+            LCD.SetFontColor(BURLYWOOD);
+            LCD.WriteAt("Click anywhere to return",10,210);
+
             float x_pos;
             float y_pos;
 
-            // add text
-
-            if(LCD.Touch(&x_pos, &y_pos)){
+            if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
             }
             
@@ -295,12 +314,17 @@ int main()
             LCD.SetFontColor(LIGHTGREEN);
             LCD.FillRectangle(0,0,319,239);
 
+            // add text
+            LCD.SetFontColor(DARKGREEN);
+            LCD.WriteAt("How to play:",85,20);
+
+            LCD.SetFontColor(GREEN);
+            LCD.WriteAt("Click anywhere to return",10,210);
+
             float x_pos;
             float y_pos;
 
-            // add text
-
-            if(LCD.Touch(&x_pos, &y_pos)){
+            if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
             }
             
