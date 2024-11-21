@@ -182,7 +182,7 @@ int main()
             float x_pos;
             float y_pos;
 
-            if(LCD.Touch(&x_pos, &y_pos) && moveSpeed == 0){
+            if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 startButton.draw(x_pos, y_pos);
                 infoButton.draw(x_pos, y_pos);
                 statsButton.draw(x_pos, y_pos);
@@ -218,7 +218,7 @@ int main()
             float x_pos;
             float y_pos;
 
-            if(LCD.Touch(&x_pos, &y_pos) && moveSpeed == 0){
+            if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 timeHeld++;
                 bar.increaseBar();
             }else{
