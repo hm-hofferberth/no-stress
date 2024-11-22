@@ -99,8 +99,9 @@ class Ground{
         float position;
         FEHImage image;
         
-        Ground(char imageName []){
-            image.Open(imageName);
+
+        Ground(){
+            image.Open("Ground/Ground-1.png");
         }
 
          void openImage(char imageName []){
@@ -210,13 +211,11 @@ int main()
     Character player;
     player.changeCostume("character/sprite_00.png");
 
-    Ground ground1("Ground/Ground-1.png");
-    Ground ground2("Ground/Ground-2.png");
-    Ground ground3("Ground/Ground-2.png");
+    Ground currGround [3];
 
-    ground1.position = 0;
-    ground2.position = 300;
-    ground3.position = 600;
+    currGround[0].position = 0;
+    currGround[1].position = 300;
+    currGround[2].position = 600;
 
 
     Obstacle currentObstacles[15];
@@ -234,7 +233,7 @@ int main()
     float lastGeneratedX = 100;
     float lastObGeneratedX = 200;
     float currGenerationDistance = 50;
-    float currObGenerationDistance = 350;
+    float currObGenerationDistance = 1550;
     float currObstacleGenMax = 390;
 
     float timeHeld = 0;
@@ -286,9 +285,10 @@ int main()
             LCD.FillRectangle(0,0,319,239);
             
             // sprites
-            ground1.drawGround();
-            ground2.drawGround();
-            ground3.drawGround();
+            currGround[0].drawGround();
+            currGround[1].drawGround();
+            currGround[2].drawGround();
+
             player.drawChar();
 
             // check if touching
@@ -320,8 +320,6 @@ int main()
                         player.xPos = 0;
                         lastGeneratedX = 0;
                         lastObGeneratedX = 0;
-                        // lastGeneratedX -= 2000;
-                        // lastObGeneratedX -= 2000;
                         
                     }
                     
@@ -337,32 +335,21 @@ int main()
 
 
             // Ground adjustment
-            ground1.position -= moveSpeed;
-            ground2.position -= moveSpeed;
-            ground3.position -= moveSpeed;
+            currGround[0].position -= moveSpeed;
+            currGround[1].position -= moveSpeed;
+            currGround[2].position -= moveSpeed;
       
 
-            if(ground1.position <= -300){
-                Ground temp("Ground/Ground-1.png");
-                temp.position = 600;
-                ground1 = temp;
-                //ground1.openImage("Ground/Ground-1.png");
-                
+            if(currGround[0].position <= -300){
+                currGround[0].position = 600;
+               
             }
-            if(ground2.position <= -300){
-                Ground temp("Ground/Ground-1.png");
-                temp.position = 600;
-                ground2 = temp;
-                //ground2.position = 320;
-                //ground2.openImage("Ground/Ground-2.png");
-                
+            if(currGround[1].position <= -300){
+                currGround[1].position = 600;
+            
             }
-            if(ground3.position <= -300){
-                Ground temp("Ground/Ground-1.png");
-                temp.position = 600;
-                ground3 = temp;
-                //ground2.position = 320;
-                //ground2.openImage("Ground/Ground-2.png");
+            if(currGround[2].position <= -300){
+                currGround[2].position = 600;
                 
             }
 
@@ -382,7 +369,7 @@ int main()
                 currentObstacles[currObstacleGenerated].image = obstacleImages[random];
                 currentObstacles[currObstacleGenerated].generated = true;
 
-                if(currObstacleGenerated < 15){
+                if(currObstacleGenerated < 14){
                     currObstacleGenerated++;
                 }else{
                     currObstacleGenerated = 0;
@@ -394,7 +381,7 @@ int main()
                 currGenerationDistance = randomDistance;
             }
 
-            //Generate objects
+            // //Generate objects
             
             if(player.xPos - lastObGeneratedX > currObGenerationDistance){
                 currentObjects[currObjectGenerated].xPos = 350;
@@ -404,7 +391,7 @@ int main()
                 currentObjects[currObjectGenerated].image = objectImages[random];
                 currentObjects[currObjectGenerated].generated = true;
 
-                if(currObjectGenerated < 15){
+                if(currObjectGenerated < 14){
                     currObjectGenerated++;
                 }else{
                     currObjectGenerated = 0;
@@ -412,7 +399,7 @@ int main()
                 
                 lastObGeneratedX = player.xPos;
 
-                float randomDistance = 500 * (Random.RandInt() / 32767.0) + 30;
+                float randomDistance = 1250 * (Random.RandInt() / 32767.0) + 20;
                 currObGenerationDistance = randomDistance;
             }
 
