@@ -128,10 +128,10 @@ class Obstacle{
             yPos = 0;
         }
 
-        Obstacle(char img[]){
+        Obstacle(char img[], float y){
             image.Open(img);
             xPos = 0;
-            yPos = 0;
+            yPos = y;
         }
 
         void draw(){
@@ -221,10 +221,10 @@ int main()
     Obstacle currentObstacles[15];
     Object currentObjects[15];
     
-    char objectImages[2][30] = {"objects/Bed.png", "objects/Heart.png"};
-    char obstacleImages[6][30] = {"obstacles/AlarmClock.png",
+    char objectImages[3][30] = {"objects/Bed.png", "objects/Heart.png","objects/Coffee.png"};
+    char obstacleImages[12][30] = {"obstacles/AlarmClock.png",
     "obstacles/Bill.png", "obstacles/Cell_Phone.png", "obstacles/Clock.png", 
-   "obstacles/Money.png", "obstacles/Thunder.png"};
+   "obstacles/books.png", "obstacles/Thunder.png", "obstacles/paper1.png","obstacles/Application.png", "obstacles/messages.png","obstacles/News.png","obstacles/Email.png", "obstacles/Phone2.png"};
 
     JumpBar bar;
 
@@ -356,7 +356,7 @@ int main()
 
             // Change obstacle generation distance
             if(currObstacleGenMax > 80){
-                currObstacleGenMax -= 0.05;
+                currObstacleGenMax -= 0.02;
             }
 
             // Generate obstacles
@@ -365,9 +365,21 @@ int main()
                 currentObstacles[currObstacleGenerated].xPos = 350;
                 currentObstacles[currObstacleGenerated].yPos = 155;
 
-                int random = 6 * (Random.RandInt() / 32767.0);
+                int random = 12 * (Random.RandInt() / 32767.0);
                 currentObstacles[currObstacleGenerated].image = obstacleImages[random];
                 currentObstacles[currObstacleGenerated].generated = true;
+
+                if(random == 5){
+                    currentObstacles[currObstacleGenerated].yPos = 140 * (Random.RandInt() / 32767.0) - 40;
+                }else if(random == 4){
+                    currentObstacles[currObstacleGenerated].yPos = 120;
+                }else if(random == 8 || random == 9 || random == 10){
+                    currentObstacles[currObstacleGenerated].yPos = 100 * (Random.RandInt() / 32767.0);
+                }else if(random == 7 || random == 6){
+                    currentObstacles[currObstacleGenerated].yPos = 147;
+                }else if(random == 11){
+                    currentObstacles[currObstacleGenerated].yPos = 147;
+                }
 
                 if(currObstacleGenerated < 14){
                     currObstacleGenerated++;
@@ -387,7 +399,12 @@ int main()
                 currentObjects[currObjectGenerated].xPos = 350;
                 currentObjects[currObjectGenerated].yPos = 155;
 
-                int random = 2 * (Random.RandInt() / 32767.0);
+                int random = 3 * (Random.RandInt() / 32767.0);
+                 if(random == 1 || random == 2){
+                    currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
+                 }else if(random == 0){
+                    currentObjects[currObjectGenerated].yPos = 120;
+                 }
                 currentObjects[currObjectGenerated].image = objectImages[random];
                 currentObjects[currObjectGenerated].generated = true;
 
