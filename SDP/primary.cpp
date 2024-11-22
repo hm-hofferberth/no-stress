@@ -108,8 +108,8 @@ class Ground{
         }
 
         void drawGround(){
-            image.Draw(position,0);
-        }
+           image.Draw(position,0);
+       }
         
 
 };
@@ -212,8 +212,12 @@ int main()
 
     Ground ground1("Ground/Ground-1.png");
     Ground ground2("Ground/Ground-2.png");
+    Ground ground3("Ground/Ground-2.png");
+
     ground1.position = 0;
-    ground2.position = 320;
+    ground2.position = 300;
+    ground3.position = 600;
+
 
     Obstacle currentObstacles[15];
     Object currentObjects[15];
@@ -284,6 +288,7 @@ int main()
             // sprites
             ground1.drawGround();
             ground2.drawGround();
+            ground3.drawGround();
             player.drawChar();
 
             // check if touching
@@ -309,6 +314,16 @@ int main()
                     // Mid jump
                     player.transitionJump(jumpLevel);
                     player.xPos += moveSpeed;
+
+                    // Reset xPos so it never gets too large
+                    if(player.xPos > 2000){
+                        player.xPos = 0;
+                        lastGeneratedX = 0;
+                        lastObGeneratedX = 0;
+                        // lastGeneratedX -= 2000;
+                        // lastObGeneratedX -= 2000;
+                        
+                    }
                     
                 }else{
                     // Jump is done
@@ -321,18 +336,33 @@ int main()
             }
 
 
-            // Ground adjustments
+            // Ground adjustment
             ground1.position -= moveSpeed;
             ground2.position -= moveSpeed;
+            ground3.position -= moveSpeed;
+      
 
-            if(ground1.position <= -320){
-                ground1.position = ground2.position+320;
-                ground1.openImage("Ground/Ground-1.png");
+            if(ground1.position <= -300){
+                Ground temp("Ground/Ground-1.png");
+                temp.position = 600;
+                ground1 = temp;
+                //ground1.openImage("Ground/Ground-1.png");
                 
             }
-            if(ground2.position <= -320){
-                ground2.position = ground1.position+320;
-                ground2.openImage("Ground/Ground-2.png");
+            if(ground2.position <= -300){
+                Ground temp("Ground/Ground-1.png");
+                temp.position = 600;
+                ground2 = temp;
+                //ground2.position = 320;
+                //ground2.openImage("Ground/Ground-2.png");
+                
+            }
+            if(ground3.position <= -300){
+                Ground temp("Ground/Ground-1.png");
+                temp.position = 600;
+                ground3 = temp;
+                //ground2.position = 320;
+                //ground2.openImage("Ground/Ground-2.png");
                 
             }
 
