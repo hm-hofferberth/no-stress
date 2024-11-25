@@ -727,7 +727,14 @@ int main()
             // add text
             LCD.SetFontColor(BROWN);
             LCD.WriteAt("An Escaping",100,20);
-            LCD.WriteAt("Meatball Production",50,40);
+            LCD.WriteAt("Meatball Production",50,35);
+
+            FEHImage brand;
+            brand.Open("Logo2x.png");
+            brand.Draw(95,40);
+
+            LCD.WriteAt("Hannah Hofferberth and",25,164);    
+            LCD.WriteAt("Pierre van Zyl",60,180);    
 
             LCD.SetFontColor(BURLYWOOD);
             LCD.WriteAt("Click anywhere to return",10,210);
@@ -768,7 +775,7 @@ int main()
             LCD.WriteAt("Game Over!",95,20);
             LCD.WriteAt("Score: " ,65,50);
             LCD.WriteAt((int)score/100 ,195,50);
-            LCD.WriteAt("High Score: " ,50,95);
+            LCD.WriteAt("High Score: " ,50,85);
             LCD.WriteAt((int)maxScore/100 ,200,85);
 
             LCD.SetFontColor(WHITE);
