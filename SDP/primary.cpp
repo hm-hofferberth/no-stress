@@ -74,11 +74,10 @@ class Character{
         }
 
         void transitionJump(int maxIndex){
-            if(maxIndex > 75){
-                maxIndex = 75;
+            if(maxIndex > (75 - (stressIndex * 5))){
+                maxIndex = 75 - (stressIndex * 5);
+                
             }
-            maxIndex -= (stressIndex*5);
-            maxIndex += 5;
 
             if(jumpIndex < maxIndex){
                 yPos -= (maxIndex - jumpIndex) * (JUMPSPEED);
@@ -286,6 +285,20 @@ int main()
             player.colliding = false;
             player.stressIndex = 0;
             player.jumping = false;
+            player.xPos = 0;
+            player.yPos = 85;
+
+            for(int i = 0; i < 15; i++){
+                currentObstacles[i].generated = false;
+                
+            }
+
+            for(int i = 0; i < 15; i++){
+                currentObjects[i].generated = false;
+                
+            }
+
+
 
             resetTime = false;
         }
@@ -345,7 +358,7 @@ int main()
 
             if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 timeHeld++;
-                bar.increaseBar(75 - (player.stressIndex*10));
+                bar.increaseBar(75 - (player.stressIndex * 5)); // *10
                 if(player.colliding == 0){
                     player.changeCostume(crouches[(int)player.stressIndex]);
                 }else{
