@@ -76,6 +76,8 @@ class Character{
             if(maxIndex > 75){
                 maxIndex = 75;
             }
+            maxIndex -= (stressIndex*5);
+            maxIndex += 5;
 
             if(jumpIndex < maxIndex){
                 yPos -= (maxIndex - jumpIndex) * (JUMPSPEED);
@@ -217,7 +219,10 @@ int main()
 
     // Variables for the game
     Character player;
-    player.changeCostume("character/sprite_00.png");
+    char crouches[6][35] = {"Char_crouch/sprite_0_crouch.png", "Char_crouch/sprite_2_crouch.png", "Char_crouch/sprite_4_crouch.png", "Char_crouch/sprite_6_crouch.png", "Char_crouch/sprite_8_crouch.png", "Char_crouch/sprite_10_crouch.png"};
+    char stands[6][35] = {"character/sprite_00.png", "character/sprite_02.png", "character/sprite_04.png", "character/sprite_06.png", "character/sprite_08.png", "character/sprite_10.png"};
+    char jumps[6][35] = {"character/sprite_01.png", "character/sprite_03.png", "character/sprite_05.png", "character/sprite_07.png", "character/sprite_09.png", "character/sprite_11.png"};
+    player.changeCostume(stands[0]);
 
     Ground currGround [3];
 
@@ -306,21 +311,21 @@ int main()
 
             if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 timeHeld++;
-                bar.increaseBar(75 - player.stressIndex);
-                player.changeCostume("Char_crouch/sprite_0_crouch.png");
+                bar.increaseBar(75 - (player.stressIndex*10));
+                player.changeCostume(crouches[(int)player.stressIndex]);
             }else{
 
                 // Detecting jump status
                 if(timeHeld != 0){
                     // if it was just released, set jump info
-                    player.changeCostume("character/sprite_01.png");
+                    player.changeCostume(jumps[(int)player.stressIndex]);
                     jumpLevel = timeHeld;
-                    jumpLevel -= player.stressIndex;
                     timeHeld = 0;
                     moveSpeed = 1.5;
                     player.jumpIndex = 1;
                 }else if(player.jumpIndex != 0){
                     // Mid jump
+                    player.changeCostume(jumps[(int)player.stressIndex]);
                     player.transitionJump(jumpLevel);
                     player.xPos += moveSpeed;
 
@@ -335,7 +340,7 @@ int main()
                 }else{
                     // Jump is done
                     moveSpeed = 0;
-                    player.changeCostume("character/sprite_00.png");
+                    player.changeCostume(stands[(int)player.stressIndex]);
                 }
 
                 bar.resetBar();
