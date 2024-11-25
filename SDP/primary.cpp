@@ -229,7 +229,7 @@ int main()
     Obstacle currentObstacles[15];
     Object currentObjects[15];
     
-    char objectImages[3][30] = {"objects/Bed.png", "objects/Heart.png","objects/Coffee.png"};
+    char objectImages[8][30] = {"objects/Bed.png", "objects/Heart.png","objects/Coffee.png","objects/Outside.png", "objects/Sports.png", "objects/Call.png", "objects/Journal.png", "objects/Journal.png"};
     char obstacleImages[12][30] = {"obstacles/AlarmClock.png",
     "obstacles/Bill.png", "obstacles/Cell_Phone.png", "obstacles/Clock.png", 
    "obstacles/books.png", "obstacles/Thunder.png", "obstacles/paper1.png","obstacles/Application.png", 
@@ -409,11 +409,13 @@ int main()
                 currentObjects[currObjectGenerated].xPos = 350;
                 currentObjects[currObjectGenerated].yPos = 155;
 
-                int random = 3 * (Random.RandInt() / 32767.0);
-                 if(random == 1 || random == 2){
+                int random = 8 * (Random.RandInt() / 32767.0);
+                 if(random == 1 || random == 2 || random == 3 || random == 4 || random == 5){
                     currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
                  }else if(random == 0){
                     currentObjects[currObjectGenerated].yPos = 120;
+                 }else if(random == 6 || random == 7){
+                    currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
                  }
                 currentObjects[currObjectGenerated].image = objectImages[random];
                 strcpy(currentObjects[currObjectGenerated].imageName, objectImages[random]);
