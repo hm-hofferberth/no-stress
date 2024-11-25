@@ -1,4 +1,5 @@
 #include "FEHLCD.h"
+#include "FEHUtility.h"
 #include "FEHImages.h"
 #include "FEHRandom.h"
 #define JUMPSPEED 0.06
@@ -61,7 +62,6 @@ class Character{
         float xPos = 0;
         float yPos = 85;
         int jumpIndex = 0;
-        bool jumping = false;
         int colliding = 0;
         FEHImage character;
 
@@ -205,8 +205,10 @@ void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen, bool *res
     hitPlayer->stressIndex++;
     (*hitPlayer).changeCostume("Collided.png");
     (*hitPlayer).colliding = 15;
+
+    // End game
     if((*hitPlayer).stressIndex > 5){
-        (*screen) = 1;
+        (*screen) = 6;
         (*reset) = true;
     }
 }
@@ -214,14 +216,14 @@ void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen, bool *res
 
 int main()
 {
-    // 1: menu, 2: stats, 3: credits, 4: instructions, 5: game
+    // 1: menu, 2: stats, 3: credits, 4: instructions, 5: game, 6: game over
     int screen = 1;
 
     // Variables for the menu
-    Button startButton("Buttons/sprite_0.png", "Buttons/sprite_1.png", 90, 150, 60, 15, 5);
-    Button statsButton("Buttons/sprite_2.png", "Buttons/sprite_3.png", 65, 190, 60, 15, 2);
-    Button creditsButton("Buttons/sprite_4.png", "Buttons/sprite_5.png", 160, 190, 60, 15, 3);
-    Button infoButton("Buttons/sprite_6.png", "Buttons/sprite_7.png", 160, 150, 60, 15, 4);
+    Button startButton("Buttons/sprite_0.png", "Buttons/sprite_1.png", 90, 150, 60, 25, 5);
+    Button statsButton("Buttons/sprite_2.png", "Buttons/sprite_3.png", 65, 190, 60, 25, 2);
+    Button creditsButton("Buttons/sprite_4.png", "Buttons/sprite_5.png", 160, 190, 60, 25, 3);
+    Button infoButton("Buttons/sprite_6.png", "Buttons/sprite_7.png", 160, 150, 60, 25, 4);
 
 
     // Variables for the game
@@ -230,6 +232,8 @@ int main()
     char stands[6][35] = {"character/sprite_00.png", "character/sprite_02.png", "character/sprite_04.png", "character/sprite_06.png", "character/sprite_08.png", "character/sprite_10.png"};
     char jumps[6][35] = {"character/sprite_01.png", "character/sprite_03.png", "character/sprite_05.png", "character/sprite_07.png", "character/sprite_09.png", "character/sprite_11.png"};
     player.changeCostume(stands[0]);
+
+    float score = 0;
  
 
     Ground currGround [3];
@@ -284,9 +288,12 @@ int main()
 
             player.colliding = false;
             player.stressIndex = 0;
-            player.jumping = false;
             player.xPos = 0;
             player.yPos = 85;
+            
+            score = 0;
+            timeHeld = 0;
+            player.changeCostume(stands[0]);
 
             for(int i = 0; i < 15; i++){
                 currentObstacles[i].generated = false;
@@ -344,6 +351,21 @@ int main()
             // background
             LCD.SetFontColor(LIGHTBLUE);
             LCD.FillRectangle(0,0,319,239);
+
+            // score
+            LCD.SetFontColor(WHITESMOKE);
+            int placesLeft = 0;
+            if(((int)score / 100) / 10 != 0){
+                placesLeft = 1;
+                if(((int)score / 100) / 100 != 0){
+                placesLeft = 2;
+                }
+                if(((int)score / 100) / 1000 != 0){
+                placesLeft = 3;
+                }
+            }
+            LCD.WriteAt((int)score / 100, 290 - placesLeft * 10, 10);
+
             
             // sprites
             currGround[0].drawGround();
@@ -388,6 +410,7 @@ int main()
                 }
                     player.transitionJump(jumpLevel);
                     player.xPos += moveSpeed;
+                    score += moveSpeed;
 
                     // Reset xPos so it never gets too large
                     if(player.xPos > 2000){
@@ -602,18 +625,36 @@ int main()
                         if (currentObjects[i].xPos < 130 && currentObjects[i].xPos > 60 && player.yPos > 60) {
                             currentObjects[i].generated = false;
                             currentObjects[i].xPos = -251;
+                            // Give stress back
+                            if(player.stressIndex > 0){
+                                player.stressIndex --;
+                            }
+                            player.changeCostume("Healed.png");
+                            player.colliding = 15;
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[1]) == 0) { // Heart can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
                             currentObjects[i].generated = false;
                             currentObjects[i].xPos = -251;
+                            // Give stress back
+                            if(player.stressIndex > 0){
+                                player.stressIndex --;
+                            }
+                            player.changeCostume("Healed.png");
+                            player.colliding = 15;
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[2]) == 0) { // Coffee can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
                             currentObjects[i].generated = false;
                             currentObjects[i].xPos = -251;
+                            // Give stress back
+                            if(player.stressIndex > 0){
+                                player.stressIndex --;
+                            }
+                            player.changeCostume("Healed.png");
+                            player.colliding = 15;
                         }
                     }
                 }
@@ -671,6 +712,25 @@ int main()
 
             LCD.SetFontColor(GREEN);
             LCD.WriteAt("Click anywhere to return",10,210);
+
+            float x_pos;
+            float y_pos;
+
+            if(LCD.Touch(&x_pos, &y_pos, false)){
+                screen = 1;
+            }
+            
+        }else if(screen == 6){ // info
+            // background
+            LCD.SetFontColor(DARKRED);
+            LCD.FillRectangle(0,0,319,239);
+
+            // add text
+            LCD.SetFontColor(WHITE);
+            LCD.WriteAt("Game Over!",85,20);
+
+            LCD.SetFontColor(WHITE);
+            LCD.WriteAt("Click to return to menu",10,210);
 
             float x_pos;
             float y_pos;
