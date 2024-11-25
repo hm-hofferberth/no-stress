@@ -120,6 +120,7 @@ class Obstacle{
         float xPos;
         float yPos;
         bool generated = false;
+        char imageName[30] = "";
         FEHImage image;
         
         Obstacle(){
@@ -130,6 +131,7 @@ class Obstacle{
 
         Obstacle(char img[], float y){
             image.Open(img);
+            strcpy(imageName, img);
             xPos = 0;
             yPos = y;
         }
@@ -145,6 +147,7 @@ class Object{
         float xPos;
         float yPos;
         bool generated = false;
+        char imageName[30] = "";
         FEHImage image;
         
         Object(){
@@ -155,6 +158,7 @@ class Object{
 
         Object(char img[]){
             image.Open(img);
+            strcpy(imageName, img);
             xPos = 0;
             yPos = 0;
         }
@@ -224,7 +228,8 @@ int main()
     char objectImages[3][30] = {"objects/Bed.png", "objects/Heart.png","objects/Coffee.png"};
     char obstacleImages[12][30] = {"obstacles/AlarmClock.png",
     "obstacles/Bill.png", "obstacles/Cell_Phone.png", "obstacles/Clock.png", 
-   "obstacles/books.png", "obstacles/Thunder.png", "obstacles/paper1.png","obstacles/Application.png", "obstacles/messages.png","obstacles/News.png","obstacles/Email.png", "obstacles/Phone2.png"};
+   "obstacles/books.png", "obstacles/Thunder.png", "obstacles/paper1.png","obstacles/Application.png", 
+   "obstacles/messages.png","obstacles/News.png","obstacles/Email.png", "obstacles/Phone2.png"};
 
     JumpBar bar;
 
@@ -232,14 +237,14 @@ int main()
     int currObstacleGenerated = 0;
     float lastGeneratedX = 100;
     float lastObGeneratedX = 200;
-    float currGenerationDistance = 50;
+    float currGenerationDistance = 10; // og was 50
     float currObGenerationDistance = 1550;
     float currObstacleGenMax = 390;
 
     float timeHeld = 0;
     float moveSpeed = 0;
     int jumpLevel = 50;
-    
+
     while (1) {
 
         if(screen == 1){
@@ -320,7 +325,7 @@ int main()
                         player.xPos = 0;
                         lastGeneratedX = 0;
                         lastObGeneratedX = 0;
-                        
+
                     }
                     
                 }else{
@@ -367,6 +372,7 @@ int main()
 
                 int random = 12 * (Random.RandInt() / 32767.0);
                 currentObstacles[currObstacleGenerated].image = obstacleImages[random];
+                strcpy(currentObstacles[currObstacleGenerated].imageName, obstacleImages[random]);
                 currentObstacles[currObstacleGenerated].generated = true;
 
                 if(random == 5){
@@ -406,6 +412,7 @@ int main()
                     currentObjects[currObjectGenerated].yPos = 120;
                  }
                 currentObjects[currObjectGenerated].image = objectImages[random];
+                strcpy(currentObjects[currObjectGenerated].imageName, objectImages[random]);
                 currentObjects[currObjectGenerated].generated = true;
 
                 if(currObjectGenerated < 14){
@@ -444,6 +451,108 @@ int main()
                     }
                 }
                 
+            }
+
+            // Check collisions
+            // Check obstacles
+            for(int i = 0; i < 15; i++){
+                if (currentObstacles[i].generated) {
+                    if (strcmp(currentObstacles[i].imageName, obstacleImages[0]) == 0) { // AlarmClock
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[1]) == 0) { // Bill
+                        if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[2]) == 0) { // Cell_Phone
+                        if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[3]) == 0) { // Clock
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[4]) == 0) { // books
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 40) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[5]) == 0) { // Thunder can have y
+                        if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[6]) == 0) { // paper1
+                        if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[7]) == 0) { // Application
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[8]) == 0) { // messages can have y
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[9]) == 0) { // News can have y
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[10]) == 0) { // Email can have y
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObstacles[i].imageName, obstacleImages[11]) == 0) { // Phone2
+                        if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            currentObstacles[i].generated = false;
+                            currentObstacles[i].xPos = -251;
+                        }
+                    }
+                }
+            }
+
+            // check objects
+            for (int i = 0; i < 3; i++) {
+                if (currentObjects[i].generated) {
+                    if (strcmp(currentObjects[i].imageName, objectImages[0]) == 0) { // Bed
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 60 && player.yPos > 60) {
+                            currentObjects[i].generated = false;
+                            currentObjects[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[1]) == 0) { // Heart
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                            currentObjects[i].generated = false;
+                            currentObjects[i].xPos = -251;
+                        }
+
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[2]) == 0) { // Coffee
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                            currentObjects[i].generated = false;
+                            currentObjects[i].xPos = -251;
+                        }
+                    }
+                }
             }
 
 
