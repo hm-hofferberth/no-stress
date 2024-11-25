@@ -237,7 +237,7 @@ int main()
     int currObstacleGenerated = 0;
     float lastGeneratedX = 100;
     float lastObGeneratedX = 200;
-    float currGenerationDistance = 10; // og was 50
+    float currGenerationDistance = 50;
     float currObGenerationDistance = 1550;
     float currObstacleGenMax = 390;
 
@@ -535,18 +535,18 @@ int main()
             for (int i = 0; i < 3; i++) {
                 if (currentObjects[i].generated) {
                     if (strcmp(currentObjects[i].imageName, objectImages[0]) == 0) { // Bed
-                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 60 && player.yPos > 60) {
+                        if (currentObjects[i].xPos < 130 && currentObjects[i].xPos > 60 && player.yPos > 60) {
                             currentObjects[i].generated = false;
                             currentObjects[i].xPos = -251;
                         }
 
-                    } else if (strcmp(currentObjects[i].imageName, objectImages[1]) == 0) { // Heart
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[1]) == 0) { // Heart can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
                             currentObjects[i].generated = false;
                             currentObjects[i].xPos = -251;
                         }
 
-                    } else if (strcmp(currentObjects[i].imageName, objectImages[2]) == 0) { // Coffee
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[2]) == 0) { // Coffee can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
                             currentObjects[i].generated = false;
                             currentObjects[i].xPos = -251;
