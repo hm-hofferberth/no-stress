@@ -62,6 +62,7 @@ class Character{
         float yPos = 85;
         int jumpIndex = 0;
         bool jumping = false;
+        int colliding = 0;
         FEHImage character;
 
         void changeCostume(char costume[]){
@@ -199,11 +200,18 @@ class JumpBar{
         }
 };
 
-void collide(Obstacle *hitObstacle, Character *hitPlayer) {
+void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen, bool *reset) {
     hitObstacle->generated = false;
     hitObstacle->xPos = -251;
     hitPlayer->stressIndex++;
+    (*hitPlayer).changeCostume("Collided.png");
+    (*hitPlayer).colliding = 15;
+    if((*hitPlayer).stressIndex > 5){
+        (*screen) = 1;
+        (*reset) = true;
+    }
 }
+
 
 int main()
 {
@@ -223,6 +231,7 @@ int main()
     char stands[6][35] = {"character/sprite_00.png", "character/sprite_02.png", "character/sprite_04.png", "character/sprite_06.png", "character/sprite_08.png", "character/sprite_10.png"};
     char jumps[6][35] = {"character/sprite_01.png", "character/sprite_03.png", "character/sprite_05.png", "character/sprite_07.png", "character/sprite_09.png", "character/sprite_11.png"};
     player.changeCostume(stands[0]);
+ 
 
     Ground currGround [3];
 
@@ -254,7 +263,32 @@ int main()
     float moveSpeed = 0;
     int jumpLevel = 50;
 
+    bool resetTime = false;
+
     while (1) {
+        if(resetTime){
+            currObjectGenerated = 0;
+            currObstacleGenerated = 0;
+            lastGeneratedX = 100;
+            lastObGeneratedX = 200;
+            currGenerationDistance = 50;
+            currObGenerationDistance = 1550;
+            currObstacleGenMax = 390;
+
+            timeHeld = 0;
+            moveSpeed = 0;
+            jumpLevel = 50;
+
+            currGround[0].position = 0;
+            currGround[1].position = 300;
+            currGround[2].position = 600;
+
+            player.colliding = false;
+            player.stressIndex = 0;
+            player.jumping = false;
+
+            resetTime = false;
+        }
 
         if(screen == 1){
           // background
@@ -312,20 +346,33 @@ int main()
             if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 timeHeld++;
                 bar.increaseBar(75 - (player.stressIndex*10));
-                player.changeCostume(crouches[(int)player.stressIndex]);
+                if(player.colliding == 0){
+                    player.changeCostume(crouches[(int)player.stressIndex]);
+                }else{
+                    player.colliding --;
+                }
+                
             }else{
 
                 // Detecting jump status
                 if(timeHeld != 0){
                     // if it was just released, set jump info
+                    if(player.colliding == 0){
                     player.changeCostume(jumps[(int)player.stressIndex]);
+                }else{
+                    player.colliding --;
+                }
                     jumpLevel = timeHeld;
                     timeHeld = 0;
                     moveSpeed = 1.5;
                     player.jumpIndex = 1;
                 }else if(player.jumpIndex != 0){
                     // Mid jump
+                    if(player.colliding == 0){
                     player.changeCostume(jumps[(int)player.stressIndex]);
+                }else{
+                    player.colliding --;
+                }
                     player.transitionJump(jumpLevel);
                     player.xPos += moveSpeed;
 
@@ -340,7 +387,11 @@ int main()
                 }else{
                     // Jump is done
                     moveSpeed = 0;
+                    if(player.colliding == 0){
                     player.changeCostume(stands[(int)player.stressIndex]);
+                }else{
+                    player.colliding --;
+                }
                 }
 
                 bar.resetBar();
@@ -470,62 +521,62 @@ int main()
                 if (currentObstacles[i].generated) {
                     if (strcmp(currentObstacles[i].imageName, obstacleImages[0]) == 0) { // AlarmClock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[1]) == 0) { // Bill
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[2]) == 0) { // Cell_Phone
                         if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[3]) == 0) { // Clock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[4]) == 0) { // books
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 40) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[5]) == 0) { // Thunder can have y
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[6]) == 0) { // paper1
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[7]) == 0) { // Application
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[8]) == 0) { // messages can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[9]) == 0) { // News can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[10]) == 0) { // Email can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[11]) == 0) { // Phone2
                         if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player);
+                            collide(&currentObstacles[i], &player, &screen, &resetTime);
                         }
                     }
                 }
