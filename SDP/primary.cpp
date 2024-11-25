@@ -197,7 +197,11 @@ class JumpBar{
         }
 };
 
-
+void collide(Obstacle *hitObstacle, Character *hitPlayer) {
+    hitObstacle->generated = false;
+    hitObstacle->xPos = -251;
+    hitPlayer->stressIndex++;
+}
 
 int main()
 {
@@ -459,73 +463,62 @@ int main()
                 if (currentObstacles[i].generated) {
                     if (strcmp(currentObstacles[i].imageName, obstacleImages[0]) == 0) { // AlarmClock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[1]) == 0) { // Bill
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[2]) == 0) { // Cell_Phone
                         if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[3]) == 0) { // Clock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[4]) == 0) { // books
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 40) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[5]) == 0) { // Thunder can have y
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[6]) == 0) { // paper1
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[7]) == 0) { // Application
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[8]) == 0) { // messages can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[9]) == 0) { // News can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[10]) == 0) { // Email can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[11]) == 0) { // Phone2
                         if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            currentObstacles[i].generated = false;
-                            currentObstacles[i].xPos = -251;
+                            collide(&currentObstacles[i], &player);
                         }
                     }
                 }
