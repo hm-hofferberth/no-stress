@@ -199,7 +199,7 @@ class JumpBar{
         }
 };
 
-void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen, bool *reset) {
+void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     hitObstacle->generated = false;
     hitObstacle->xPos = -251;
     hitPlayer->stressIndex++;
@@ -209,8 +209,13 @@ void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen, bool *res
     // End game
     if((*hitPlayer).stressIndex > 5){
         (*screen) = 6;
-        (*reset) = true;
     }
+}
+
+void checkScore(float *score, float *maxScore){
+    if(score > maxScore){
+        *maxScore = *score;
+    }        
 }
 
 
@@ -234,8 +239,8 @@ int main()
     player.changeCostume(stands[0]);
 
     float score = 0;
+    float maxScore = 0;
  
-
     Ground currGround [3];
 
     currGround[0].position = 0;
@@ -557,62 +562,95 @@ int main()
                 if (currentObstacles[i].generated) {
                     if (strcmp(currentObstacles[i].imageName, obstacleImages[0]) == 0) { // AlarmClock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[1]) == 0) { // Bill
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[2]) == 0) { // Cell_Phone
                         if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[3]) == 0) { // Clock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[4]) == 0) { // books
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 40) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[5]) == 0) { // Thunder can have y
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[6]) == 0) { // paper1
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[7]) == 0) { // Application
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[8]) == 0) { // messages can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[9]) == 0) { // News can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[10]) == 0) { // Email can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[11]) == 0) { // Phone2
                         if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen, &resetTime);
+                            collide(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
                     }
                 }
@@ -727,16 +765,21 @@ int main()
 
             // add text
             LCD.SetFontColor(WHITE);
-            LCD.WriteAt("Game Over!",85,20);
+            LCD.WriteAt("Game Over!",95,20);
+            LCD.WriteAt("Score: " ,65,50);
+            LCD.WriteAt((int)score/100 ,195,50);
+            LCD.WriteAt("High Score: " ,50,95);
+            LCD.WriteAt((int)maxScore/100 ,200,85);
 
             LCD.SetFontColor(WHITE);
-            LCD.WriteAt("Click to return to menu",10,210);
+            LCD.WriteAt("Click to return to menu",15,210);
 
             float x_pos;
             float y_pos;
 
             if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
+                resetTime = true;
             }
             
         }
