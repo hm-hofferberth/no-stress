@@ -199,7 +199,7 @@ class JumpBar{
         }
 };
 
-void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
+void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     hitObstacle->generated = false;
     hitObstacle->xPos = -251;
     hitPlayer->stressIndex++;
@@ -210,6 +210,18 @@ void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     if((*hitPlayer).stressIndex > 5){
         (*screen) = 6;
     }
+}
+
+void collideObject(Object *hitObject, Character *hitPlayer, int *screen) {
+    hitObject->generated = false;
+    hitObject->xPos = -251;
+
+    // Give stress back
+    if(hitPlayer->stressIndex > 0){
+        hitPlayer->stressIndex--;
+    }
+    (*hitPlayer).changeCostume("Healed.png");
+    (*hitPlayer).colliding = 15;
 }
 
 void checkScore(float *score, float *maxScore){
@@ -251,7 +263,7 @@ int main()
     Obstacle currentObstacles[15];
     Object currentObjects[15];
     
-    char objectImages[8][30] = {"objects/Bed.png", "objects/Heart.png","objects/Coffee.png","objects/Outside.png", "objects/Sports.png", "objects/Call.png", "objects/Journal.png", "objects/Journal.png"};
+    char objectImages[7][30] = {"objects/Bed.png", "objects/Heart.png","objects/Coffee.png","objects/Outside.png", "objects/Sports.png", "objects/Call.png", "objects/Journal.png"};
     char obstacleImages[12][30] = {"obstacles/AlarmClock.png",
     "obstacles/Bill.png", "obstacles/Cell_Phone.png", "obstacles/Clock.png", 
    "obstacles/books.png", "obstacles/Thunder.png", "obstacles/paper1.png","obstacles/Application.png", 
@@ -506,7 +518,11 @@ int main()
                 currentObjects[currObjectGenerated].xPos = 350;
                 currentObjects[currObjectGenerated].yPos = 155;
 
-                int random = 8 * (Random.RandInt() / 32767.0);
+                int random = 7 * (Random.RandInt() / 32767.0);
+                currentObjects[currObjectGenerated].image = objectImages[random];
+                strcpy(currentObjects[currObjectGenerated].imageName, objectImages[random]);
+                currentObjects[currObjectGenerated].generated = true;
+
                  if(random == 1 || random == 2 || random == 3 || random == 4 || random == 5){
                     currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
                  }else if(random == 0){
@@ -514,9 +530,6 @@ int main()
                  }else if(random == 6 || random == 7){
                     currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
                  }
-                currentObjects[currObjectGenerated].image = objectImages[random];
-                strcpy(currentObjects[currObjectGenerated].imageName, objectImages[random]);
-                currentObjects[currObjectGenerated].generated = true;
 
                 if(currObjectGenerated < 14){
                     currObjectGenerated++;
@@ -562,7 +575,7 @@ int main()
                 if (currentObstacles[i].generated) {
                     if (strcmp(currentObstacles[i].imageName, obstacleImages[0]) == 0) { // AlarmClock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -570,15 +583,15 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[1]) == 0) { // Bill
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[2]) == 0) { // Cell_Phone
-                        if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen);
+                        if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -586,7 +599,7 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[3]) == 0) { // Clock
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -594,7 +607,7 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[4]) == 0) { // books
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 40) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -602,7 +615,7 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[5]) == 0) { // Thunder can have y
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -610,12 +623,15 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[6]) == 0) { // paper1
                         if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
+                            if(player.stressIndex > 5){
+                                checkScore(&score, &maxScore);
+                            }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[7]) == 0) { // Application
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -623,7 +639,7 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[8]) == 0) { // messages can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -631,7 +647,7 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[9]) == 0) { // News can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -639,15 +655,15 @@ int main()
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[10]) == 0) { // Email can have y
                         if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
-                            collide(&currentObstacles[i], &player, &screen);
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[11]) == 0) { // Phone2
-                        if (currentObstacles[i].xPos < 90 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
-                            collide(&currentObstacles[i], &player, &screen);
+                        if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 70 && player.yPos > 60) {
+                            collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
                             }
@@ -657,42 +673,41 @@ int main()
             }
 
             // check objects
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 15; i++) {
                 if (currentObjects[i].generated) {
                     if (strcmp(currentObjects[i].imageName, objectImages[0]) == 0) { // Bed
-                        if (currentObjects[i].xPos < 130 && currentObjects[i].xPos > 60 && player.yPos > 60) {
-                            currentObjects[i].generated = false;
-                            currentObjects[i].xPos = -251;
-                            // Give stress back
-                            if(player.stressIndex > 0){
-                                player.stressIndex --;
-                            }
-                            player.changeCostume("Healed.png");
-                            player.colliding = 15;
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 60 && player.yPos > 60) {
+                            collideObject(&currentObjects[i], &player, &screen);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[1]) == 0) { // Heart can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            currentObjects[i].generated = false;
-                            currentObjects[i].xPos = -251;
-                            // Give stress back
-                            if(player.stressIndex > 0){
-                                player.stressIndex --;
-                            }
-                            player.changeCostume("Healed.png");
-                            player.colliding = 15;
+                            collideObject(&currentObjects[i], &player, &screen);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[2]) == 0) { // Coffee can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            currentObjects[i].generated = false;
-                            currentObjects[i].xPos = -251;
-                            // Give stress back
-                            if(player.stressIndex > 0){
-                                player.stressIndex --;
-                            }
-                            player.changeCostume("Healed.png");
-                            player.colliding = 15;
+                            collideObject(&currentObjects[i], &player, &screen);
+                        }
+
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[3]) == 0) { // Outside can have y
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                            collideObject(&currentObjects[i], &player, &screen);
+                        }
+
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[4]) == 0) { // Sports can have y
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                            collideObject(&currentObjects[i], &player, &screen);
+                        }
+
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[5]) == 0) { // Call can have y
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                            collideObject(&currentObjects[i], &player, &screen);
+                        }
+                        
+                    } else if (strcmp(currentObjects[i].imageName, objectImages[6]) == 0) { // Journal can have y
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                            collideObject(&currentObjects[i], &player, &screen);
                         }
                     }
                 }
