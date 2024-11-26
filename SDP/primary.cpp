@@ -4,6 +4,7 @@
 #include "FEHRandom.h"
 #define JUMPSPEED 0.06
 
+// Class written by both Hannah and Pierre
 class Button{
     private:
         float xPos;
@@ -15,6 +16,7 @@ class Button{
         int screenToInvoke;
         bool clicked = false;
     public:
+        // Constructor written by Hannah
         Button(char img[], char img2[], float x, float y, float xS, float yS, int screen){
             image.Open(img);
             clickedImage.Open(img2);
@@ -25,12 +27,14 @@ class Button{
             yPos = y;
         }
 
+        // Written by Hannah
         int callScreen(){
             return screenToInvoke;
         } 
 
 
         // Overloaded method
+        // Written by Hannah
         bool draw(){
                 if(!clicked){
                     image.Draw(xPos, yPos);
@@ -43,6 +47,7 @@ class Button{
             
         }
 
+        // Written by Hannah and Pierre
         void draw(float xClicked, float yClicked){
             if(xClicked > xPos && xClicked < (xPos+xSize) && yClicked > yPos && yClicked < (yPos+ySize)){
                 clickedImage.Draw(xPos, yPos);
@@ -56,6 +61,7 @@ class Button{
 
 };
 
+// Class written by Hannah
 class Character{
     public:
         float stressIndex = 0;
@@ -96,6 +102,7 @@ class Character{
 
 };
 
+// Class written by Hannah
 class Ground{
     public:
         float position;
@@ -116,6 +123,7 @@ class Ground{
 
 };
 
+// Class written by Hannah
 class Background{
     public:
         float position;
@@ -136,6 +144,7 @@ class Background{
 
 };
 
+// Class written by Pierre
 class Obstacle{
     public:
         float xPos;
@@ -158,11 +167,12 @@ class Obstacle{
         }
 
         void draw(){
-                image.Draw(xPos, yPos);
+            image.Draw(xPos, yPos);
             
         }
 };
 
+// Class written by Pierre
 class Object{
     public:
         float xPos;
@@ -185,11 +195,12 @@ class Object{
         }
 
         void draw(){
-                image.Draw(xPos, yPos);
+            image.Draw(xPos, yPos);
             
         }
 };
 
+// Class written by Hannah
 class JumpBar{
     private:
         float totalX = 75;
@@ -218,6 +229,8 @@ class JumpBar{
         }
 };
 
+
+// Written by Pierre
 void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     hitObstacle->generated = false;
     hitObstacle->xPos = -251;
@@ -231,6 +244,7 @@ void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     }
 }
 
+// Written by Pierre
 void collideObject(Object *hitObject, Character *hitPlayer, int *screen) {
     hitObject->generated = false;
     hitObject->xPos = -251;
@@ -250,6 +264,7 @@ void checkScore(float *score, float *maxScore){
 }
 
 
+// Written by both Hannah and Pierre
 int main()
 {
     // 1: menu, 2: stats, 3: credits, 4: instructions, 5: game, 6: game over
