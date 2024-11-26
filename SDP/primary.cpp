@@ -310,9 +310,13 @@ int main()
     int jumpLevel = 50;
 
     bool resetTime = false;
+    // Ensures no double click
+    bool released = false;
 
     while (1) {
         if(resetTime){
+            released = false;
+            
             currObjectGenerated = 0;
             currObstacleGenerated = 0;
             lastGeneratedX = 100;
@@ -377,19 +381,29 @@ int main()
                 infoButton.draw(x_pos, y_pos);
                 statsButton.draw(x_pos, y_pos);
                 creditsButton.draw(x_pos, y_pos);
+                
             }else{
-                if(startButton.draw()){
+                if(released){
+                    if(startButton.draw()){
                     screen = startButton.callScreen();
+                    }
+                    if(infoButton.draw()){
+                        screen = infoButton.callScreen();
+                    }
+                    if(statsButton.draw()){
+                        screen = statsButton.callScreen();
+                    }
+                    if(creditsButton.draw()){
+                        screen = creditsButton.callScreen();
+                    }
+                }else{
+                    startButton.draw();
+                    infoButton.draw();
+                    statsButton.draw();
+                    creditsButton.draw();
+                    released = true;
                 }
-                if(infoButton.draw()){
-                    screen = infoButton.callScreen();
-                }
-                if(statsButton.draw()){
-                    screen = statsButton.callScreen();
-                }
-                if(creditsButton.draw()){
-                    screen = creditsButton.callScreen();
-                }
+                
             }
 
             
@@ -782,6 +796,7 @@ int main()
 
             if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
+                released = false;
             }
             
         }else if(screen == 3){ // credits
@@ -809,6 +824,7 @@ int main()
 
             if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
+                released = false;
             }
             
         }else if(screen == 4){ // info
@@ -828,6 +844,7 @@ int main()
 
             if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
+                released = false;
             }
             
         }else if(screen == 6){ // info
@@ -851,6 +868,7 @@ int main()
 
             if(LCD.Touch(&x_pos, &y_pos, false)){
                 screen = 1;
+                released = false;
                 resetTime = true;
             }
             
