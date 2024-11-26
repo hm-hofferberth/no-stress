@@ -101,9 +101,28 @@ class Ground{
         float position;
         FEHImage image;
         
-
         Ground(){
             image.Open("Ground/Ground-1.png");
+        }
+
+         void openImage(char imageName []){
+            image.Open(imageName);
+        }
+
+        void drawGround(){
+           image.Draw(position,0);
+       }
+        
+
+};
+
+class Background{
+    public:
+        float position;
+        FEHImage image;
+        
+        Background(){
+            image.Open("Backgrounds/BackgroundWClouds.png");
         }
 
          void openImage(char imageName []){
@@ -250,15 +269,22 @@ int main()
     char jumps[6][35] = {"character/sprite_01.png", "character/sprite_03.png", "character/sprite_05.png", "character/sprite_07.png", "character/sprite_09.png", "character/sprite_11.png"};
     player.changeCostume(stands[0]);
 
+    FEHImage background;
+    background.Open("Backgrounds/BlueBackground-1.png");
+
     float score = 0;
     float maxScore = 0;
  
     Ground currGround [3];
+    Background currBackground [3];
 
     currGround[0].position = 0;
     currGround[1].position = 300;
     currGround[2].position = 600;
 
+    currBackground[0].position = 0;
+    currBackground[1].position = 300;
+    currBackground[2].position = 600;
 
     Obstacle currentObstacles[15];
     Object currentObjects[15];
@@ -302,6 +328,10 @@ int main()
             currGround[0].position = 0;
             currGround[1].position = 300;
             currGround[2].position = 600;
+
+            currBackground[0].position = 0;
+            currBackground[1].position = 300;
+            currBackground[2].position = 600;
 
             player.colliding = false;
             player.stressIndex = 0;
@@ -366,8 +396,7 @@ int main()
         // Actual game
         }else if(screen == 5){
             // background
-            LCD.SetFontColor(LIGHTBLUE);
-            LCD.FillRectangle(0,0,319,239);
+            background.Draw(0,0);
 
             // score
             LCD.SetFontColor(WHITESMOKE);
@@ -388,6 +417,10 @@ int main()
             currGround[0].drawGround();
             currGround[1].drawGround();
             currGround[2].drawGround();
+
+            currBackground[0].drawGround();
+            currBackground[1].drawGround();
+            currBackground[2].drawGround();
 
             player.drawChar();
 
@@ -452,10 +485,14 @@ int main()
             }
 
 
-            // Ground adjustment
+            // Ground and Background adjustment
             currGround[0].position -= moveSpeed;
             currGround[1].position -= moveSpeed;
             currGround[2].position -= moveSpeed;
+
+            currBackground[0].position -= moveSpeed/4;
+            currBackground[1].position -= moveSpeed/4;
+            currBackground[2].position -= moveSpeed/4;
       
 
             if(currGround[0].position <= -300){
@@ -468,6 +505,19 @@ int main()
             }
             if(currGround[2].position <= -300){
                 currGround[2].position = 600;
+                
+            }
+
+            if(currBackground[0].position <= -300){
+                currBackground[0].position = 600;
+               
+            }
+            if(currBackground[1].position <= -300){
+                currBackground[1].position = 600;
+            
+            }
+            if(currBackground[2].position <= -300){
+                currBackground[2].position = 600;
                 
             }
 
