@@ -213,7 +213,7 @@ void collide(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
 }
 
 void checkScore(float *score, float *maxScore){
-    if(score > maxScore){
+    if(*score > *maxScore){
         *maxScore = *score;
     }        
 }
