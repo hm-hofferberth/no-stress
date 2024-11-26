@@ -463,7 +463,7 @@ int main()
                 }
                     jumpLevel = timeHeld;
                     timeHeld = 0;
-                    moveSpeed = 1.5;
+                    moveSpeed = 1.25;
                     player.jumpIndex = 1;
                 }else if(player.jumpIndex != 0){
                     // Mid jump
