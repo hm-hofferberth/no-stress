@@ -707,7 +707,7 @@ int main()
             // add text
             LCD.SetFontColor(MAROON);
             LCD.WriteAt("High Score:",50,100);
-            LCD.WriteAt("9000",190,100);
+            LCD.WriteAt((int)maxScore/100,190,100);
 
             LCD.SetFontColor(LIGHTCORAL);
             LCD.WriteAt("Click anywhere to return",10,210);
