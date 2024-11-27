@@ -295,6 +295,7 @@ int main()
 
     float score = 0;
     float maxScore = 0;
+    int runsPlayed = 0;
  
     Ground currGround [3];
     Background currBackground [3];
@@ -338,6 +339,7 @@ int main()
     while (1) {
         // If game needs to be reset, set variables back
         if(resetTime){
+            runsPlayed++;
             released = false;
             
             currObjectGenerated = 0;
@@ -564,7 +566,7 @@ int main()
                 currentObjects[currObjectGenerated].xPos = 350;
                 currentObjects[currObjectGenerated].yPos = 155;
 
-                // Randomize which obstacle will appear
+                // Randomize which object will appear
                 int random = 7 * (Random.RandInt() / 32767.0);
                 currentObjects[currObjectGenerated].image = objectImages[random];
                 strcpy(currentObjects[currObjectGenerated].imageName, objectImages[random]);
@@ -572,12 +574,12 @@ int main()
                 currentObjects[currObjectGenerated].generated = true;
                 
                 // Depending on which was generated, sets y-pos
-                 if(random == 1 || random == 2 || random == 3 || random == 4 || random == 5){
+                 if(random == 1 || random == 2 || random == 3){
                     currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
                  }else if(random == 0){
                     currentObjects[currObjectGenerated].yPos = 120;
-                 }else if(random == 6 || random == 7){
-                    currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
+                 }else if(random == 4 || random == 5|| random == 6 || random == 7){
+                    currentObjects[currObjectGenerated].yPos = 80 * (Random.RandInt() / 32767.0) + 35;
                  }
 
                 if(currObjectGenerated < 14){ // If the array of current objects isn't full, move to next element for next time
@@ -812,8 +814,12 @@ int main()
 
             // add text
             LCD.SetFontColor(MAROON);
-            LCD.WriteAt("High Score:",50,100);
-            LCD.WriteAt((int)maxScore/100,190,100);
+            LCD.WriteAt("High Score:",70,120);
+            LCD.WriteAt((int)maxScore/100,210,120);
+
+            LCD.SetFontColor(MAROON);
+            LCD.WriteAt("Runs Played:",60,90);
+            LCD.WriteAt(runsPlayed,220,90);
 
             LCD.SetFontColor(LIGHTCORAL);
             LCD.WriteAt("Click anywhere to return",10,210);
@@ -874,18 +880,18 @@ int main()
                 released = false;
             }
             
-        }else if(screen == 6){ // info
+        }else if(screen == 6){ // game over
             // background
             LCD.SetFontColor(DARKRED);
             LCD.FillRectangle(0,0,319,239);
 
             // add text
             LCD.SetFontColor(WHITE);
-            LCD.WriteAt("Game Over!",95,20);
-            LCD.WriteAt("Score: " ,65,50);
-            LCD.WriteAt((int)score/100 ,195,50);
-            LCD.WriteAt("High Score: " ,50,85);
-            LCD.WriteAt((int)maxScore/100 ,200,85);
+            LCD.WriteAt("Game Over!",100,20);
+            LCD.WriteAt("Score: " ,70,50);
+            LCD.WriteAt((int)score/100 ,200,50);
+            LCD.WriteAt("High Score: " ,55,85);
+            LCD.WriteAt((int)maxScore/100 ,205,85);
 
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("Click to return to menu",15,210);
@@ -905,7 +911,7 @@ int main()
         LCD.Update();
         // Never end
     }
-    
+
     return 0;
 }
 
