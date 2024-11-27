@@ -28,6 +28,7 @@ class Button{
         }
 
         // Written by Hannah
+        // Returns screen associated with the button
         int callScreen(){
             return screenToInvoke;
         } 
@@ -35,6 +36,7 @@ class Button{
 
         // Overloaded method
         // Written by Hannah
+        // Returns true if it's being clicked, false if not. Draws button if not.
         bool draw(){
                 if(!clicked){
                     image.Draw(xPos, yPos);
@@ -48,6 +50,7 @@ class Button{
         }
 
         // Written by Hannah and Pierre
+        // Draws button and checks if it's being clicked.
         void draw(float xClicked, float yClicked){
             if(xClicked > xPos && xClicked < (xPos+xSize) && yClicked > yPos && yClicked < (yPos+ySize)){
                 clickedImage.Draw(xPos, yPos);
@@ -71,18 +74,21 @@ class Character{
         int colliding = 0;
         FEHImage character;
 
+        // Changes image of character to costume[]
         void changeCostume(char costume[]){
             character.Open(costume);
         }
 
+        // Draws the character
         void drawChar(){
             character.Draw(30, yPos);
         }
 
+        // Changes yPos based on the character's point in the jump. Ends jump if reached the ground.
         void transitionJump(int maxIndex){
+            // Changes the max height based on the stress level
             if(maxIndex > (75 - (stressIndex * 5))){
                 maxIndex = 75 - (stressIndex * 5);
-                
             }
 
             if(jumpIndex < maxIndex){
@@ -108,14 +114,12 @@ class Ground{
         float position;
         FEHImage image;
         
+        // Initializes all Ground with the same image
         Ground(){
             image.Open("Ground/Ground-1.png");
         }
-
-         void openImage(char imageName []){
-            image.Open(imageName);
-        }
-
+        
+        // Draws ground at current position
         void drawGround(){
            image.Draw(position,0);
        }
@@ -129,14 +133,12 @@ class Background{
         float position;
         FEHImage image;
         
+        // Initializes all Background with the same image
         Background(){
             image.Open("Backgrounds/BackgroundWClouds.png");
         }
 
-         void openImage(char imageName []){
-            image.Open(imageName);
-        }
-
+        // Draws background at current position
         void drawGround(){
            image.Draw(position,0);
        }
@@ -153,22 +155,16 @@ class Obstacle{
         char imageName[30] = "";
         FEHImage image;
         
+        // Initializes obstacle at point off the screen with arbitrary image
         Obstacle(){
             image.Open("obstacles/AlarmClock.png");
             xPos = 400;
             yPos = 0;
         }
 
-        Obstacle(char img[], float y){
-            image.Open(img);
-            strcpy(imageName, img);
-            xPos = 0;
-            yPos = y;
-        }
-
+        // Draws obstacle at current position
         void draw(){
             image.Draw(xPos, yPos);
-            
         }
 };
 
@@ -180,23 +176,17 @@ class Object{
         bool generated = false;
         char imageName[30] = "";
         FEHImage image;
-        
+
+        // Initializes object at point off screen with arbitrary image
         Object(){
             image.Open("objects/Heart.png");
             xPos = 400;
             yPos = 0;
         }
 
-        Object(char img[]){
-            image.Open(img);
-            strcpy(imageName, img);
-            xPos = 0;
-            yPos = 0;
-        }
-
+        // Draws object at current position
         void draw(){
             image.Draw(xPos, yPos);
-            
         }
 };
 
@@ -210,31 +200,43 @@ class JumpBar{
         float yPos = 205;
 
     public:
-        void resetBar(){
+        // If screen is not currently being clicked
+        void resetBar(int stressIndex){
             innerX = 0;
             LCD.SetFontColor(WHITE);
             LCD.FillRectangle(xPos,yPos,totalX,totalY); 
+
+            // Part of bar affected by stress
+            LCD.SetFontColor(RED);
+            LCD.FillRectangle(totalX - (stressIndex * 5) + 15,yPos,(stressIndex * 5),totalY); 
         }
 
-        void increaseBar(int max){
+        void increaseBar(int max, int stressIndex){
+            // Increase size of blue part of bar
             if(innerX < max){
                 innerX++;
             }
             
+            // Draw bar
             LCD.SetFontColor(WHITE);
             LCD.FillRectangle(xPos,yPos,totalX,totalY); 
-
             LCD.SetFontColor(LIGHTBLUE);
             LCD.FillRectangle(xPos,yPos,innerX,totalY); 
+            
+            // Draw part of bar affected by stress
+            LCD.SetFontColor(RED);
+            LCD.FillRectangle(totalX - (stressIndex * 5) + 15,yPos,(stressIndex * 5),totalY); 
         }
 };
 
 
 // Written by Pierre
+// Function for effects of collision with an obstacle
 void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     hitObstacle->generated = false;
     hitObstacle->xPos = -251;
     hitPlayer->stressIndex++;
+
     (*hitPlayer).changeCostume("Collided.png");
     (*hitPlayer).colliding = 15;
 
@@ -245,18 +247,22 @@ void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
 }
 
 // Written by Pierre
+// Function for effects of collision with an object
 void collideObject(Object *hitObject, Character *hitPlayer, int *screen) {
     hitObject->generated = false;
     hitObject->xPos = -251;
-
     // Give stress back
     if(hitPlayer->stressIndex > 0){
         hitPlayer->stressIndex--;
     }
+
     (*hitPlayer).changeCostume("Healed.png");
     (*hitPlayer).colliding = 15;
 }
 
+
+// Written by Hannah
+// Updates high score
 void checkScore(float *score, float *maxScore){
     if(*score > *maxScore){
         *maxScore = *score;
@@ -325,10 +331,12 @@ int main()
     int jumpLevel = 50;
 
     bool resetTime = false;
+
     // Ensures no double click
     bool released = false;
 
     while (1) {
+        // If game needs to be reset, set variables back
         if(resetTime){
             released = false;
             
@@ -371,11 +379,10 @@ int main()
                 
             }
 
-
-
             resetTime = false;
         }
-
+        
+        // Menu
         if(screen == 1){
           // background
             LCD.SetFontColor(LIGHTBLUE);
@@ -433,83 +440,86 @@ int main()
             if(((int)score / 100) / 10 != 0){
                 placesLeft = 1;
                 if(((int)score / 100) / 100 != 0){
-                placesLeft = 2;
+                    placesLeft = 2;
                 }
                 if(((int)score / 100) / 1000 != 0){
-                placesLeft = 3;
+                    placesLeft = 3;
                 }
             }
+
             LCD.WriteAt((int)score / 100, 290 - placesLeft * 10, 10);
 
             
             // sprites
+
+            // Ground
             currGround[0].drawGround();
             currGround[1].drawGround();
             currGround[2].drawGround();
-
+            // Background
             currBackground[0].drawGround();
             currBackground[1].drawGround();
             currBackground[2].drawGround();
-
+            // Player
             player.drawChar();
 
-            // check if touching
+            // check if screen clicked
             float x_pos;
             float y_pos;
 
             if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 timeHeld++;
-                bar.increaseBar(75 - (player.stressIndex * 5)); // *10
+                bar.increaseBar(75 - (player.stressIndex * 5), player.stressIndex);
                 if(player.colliding == 0){
                     player.changeCostume(crouches[(int)player.stressIndex]);
                 }else{
                     player.colliding --;
                 }
                 
-            }else{
-
+            }else{ // Not currently clicked, or is currently jumping
+                
                 // Detecting jump status
                 if(timeHeld != 0){
-                    // if it was just released, set jump info
-                    if(player.colliding == 0){
+
+                    // Set image to correct jumping sprite
                     player.changeCostume(jumps[(int)player.stressIndex]);
-                }else{
-                    player.colliding --;
-                }
+                    // Set jump info
                     jumpLevel = timeHeld;
                     timeHeld = 0;
                     moveSpeed = 1.25;
                     player.jumpIndex = 1;
+
                 }else if(player.jumpIndex != 0){
                     // Mid jump
-                    if(player.colliding == 0){
-                    player.changeCostume(jumps[(int)player.stressIndex]);
-                }else{
-                    player.colliding --;
-                }
-                    player.transitionJump(jumpLevel);
+                    if(player.colliding == 0){ // If hasn't just hit an object/obstacle
+                        player.changeCostume(jumps[(int)player.stressIndex]);
+                    }else{
+                        player.colliding --; // Decrease amount of time left to flash green/red
+                    }
+
+                    // Move character and transition where it is in its jump
+                    player.transitionJump(jumpLevel); 
                     player.xPos += moveSpeed;
                     score += moveSpeed;
 
-                    // Reset xPos so it never gets too large
+                    // Reset xPos every so often so it never gets too large
                     if(player.xPos > 2000){
                         player.xPos = 0;
                         lastGeneratedX = 0;
                         lastObGeneratedX = 0;
-
                     }
                     
-                }else{
-                    // Jump is done
+                }else{ // Jump is done
                     moveSpeed = 0;
                     if(player.colliding == 0){
-                    player.changeCostume(stands[(int)player.stressIndex]);
-                }else{
-                    player.colliding --;
-                }
+                        player.changeCostume(stands[(int)player.stressIndex]);
+                    }else{
+                        player.colliding --;
+                    }
                 }
 
-                bar.resetBar();
+                // Set bar back to normal (no inner blue bar)
+                bar.resetBar(player.stressIndex);
                 
             }
 
@@ -518,55 +528,85 @@ int main()
             currGround[0].position -= moveSpeed;
             currGround[1].position -= moveSpeed;
             currGround[2].position -= moveSpeed;
-
             currBackground[0].position -= moveSpeed/4;
             currBackground[1].position -= moveSpeed/4;
             currBackground[2].position -= moveSpeed/4;
-      
 
+            // If they've gone off the screen, reset them to the other side
             if(currGround[0].position <= -300){
                 currGround[0].position = 600;
-               
             }
             if(currGround[1].position <= -300){
                 currGround[1].position = 600;
-            
             }
             if(currGround[2].position <= -300){
                 currGround[2].position = 600;
-                
             }
 
             if(currBackground[0].position <= -300){
                 currBackground[0].position = 600;
-               
             }
             if(currBackground[1].position <= -300){
                 currBackground[1].position = 600;
-            
             }
             if(currBackground[2].position <= -300){
                 currBackground[2].position = 600;
-                
             }
 
-
-            // Change obstacle generation distance
+            // Change obstacle generation distance (gradually makes game harder)
             if(currObstacleGenMax > 80){
-                currObstacleGenMax -= 0.02;
+                currObstacleGenMax -= 0.03;
+            }
+
+            // Generate objects
+            if(player.xPos - lastObGeneratedX > currObGenerationDistance){ //If it's time for a new object to be generated
+
+                currentObjects[currObjectGenerated].xPos = 350;
+                currentObjects[currObjectGenerated].yPos = 155;
+
+                // Randomize which obstacle will appear
+                int random = 7 * (Random.RandInt() / 32767.0);
+                currentObjects[currObjectGenerated].image = objectImages[random];
+                strcpy(currentObjects[currObjectGenerated].imageName, objectImages[random]);
+                // Set its status to "generated" (will appear and collide)
+                currentObjects[currObjectGenerated].generated = true;
+                
+                // Depending on which was generated, sets y-pos
+                 if(random == 1 || random == 2 || random == 3 || random == 4 || random == 5){
+                    currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
+                 }else if(random == 0){
+                    currentObjects[currObjectGenerated].yPos = 120;
+                 }else if(random == 6 || random == 7){
+                    currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
+                 }
+
+                if(currObjectGenerated < 14){ // If the array of current objects isn't full, move to next element for next time
+                    currObjectGenerated++;
+                }else{ // If the array is full, start back from the beginning (replace objects that have gone off the screen)
+                    currObjectGenerated = 0;
+                }
+                
+                lastObGeneratedX = player.xPos; // Note where last object was generated
+
+                // Choose next distance at which to generate object (randomized)
+                float randomDistance = 1250 * (Random.RandInt() / 32767.0) + 20;
+                currObGenerationDistance = randomDistance;
             }
 
             // Generate obstacles
-            
-            if(player.xPos - lastGeneratedX > currGenerationDistance){
+            if(player.xPos - lastGeneratedX > currGenerationDistance){ //If it's time for a new obstacle to be generated
+               
                 currentObstacles[currObstacleGenerated].xPos = 350;
                 currentObstacles[currObstacleGenerated].yPos = 155;
 
+                // Randomize which obstacle will appear
                 int random = 12 * (Random.RandInt() / 32767.0);
                 currentObstacles[currObstacleGenerated].image = obstacleImages[random];
                 strcpy(currentObstacles[currObstacleGenerated].imageName, obstacleImages[random]);
+                // Set its status to "generated" (will appear and collide)
                 currentObstacles[currObstacleGenerated].generated = true;
 
+                // Depending on which was generated, sets y-pos
                 if(random == 5){
                     currentObstacles[currObstacleGenerated].yPos = 140 * (Random.RandInt() / 32767.0) - 40;
                 }else if(random == 4){
@@ -579,50 +619,33 @@ int main()
                     currentObstacles[currObstacleGenerated].yPos = 147;
                 }
 
-                if(currObstacleGenerated < 14){
+                if(currObstacleGenerated < 14){ // If the array of current obstacles isn't full, move to next element for next time
                     currObstacleGenerated++;
-                }else{
+                }else{ // If the array is full, start back from the beginning (replace obstacles that have gone off the screen)
                     currObstacleGenerated = 0;
                 }
                 
-                lastGeneratedX = player.xPos;
+                lastGeneratedX = player.xPos; // Note where last obstacle was generated
 
+                // Choose next distance at which to generate obstacle (randomized)
                 float randomDistance = currObstacleGenMax * (Random.RandInt() / 32767.0) + 40 + (currObstacleGenMax / 40);
                 currGenerationDistance = randomDistance;
             }
 
-            // //Generate objects
-            
-            if(player.xPos - lastObGeneratedX > currObGenerationDistance){
-                currentObjects[currObjectGenerated].xPos = 350;
-                currentObjects[currObjectGenerated].yPos = 155;
+            // Draw objects
+            for(int i = 0; i < 15; i++){
+                if(currentObjects[i].generated){
+                    currentObjects[i].xPos -= moveSpeed;
+                    currentObjects[i].draw();
 
-                int random = 7 * (Random.RandInt() / 32767.0);
-                currentObjects[currObjectGenerated].image = objectImages[random];
-                strcpy(currentObjects[currObjectGenerated].imageName, objectImages[random]);
-                currentObjects[currObjectGenerated].generated = true;
-
-                 if(random == 1 || random == 2 || random == 3 || random == 4 || random == 5){
-                    currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
-                 }else if(random == 0){
-                    currentObjects[currObjectGenerated].yPos = 120;
-                 }else if(random == 6 || random == 7){
-                    currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
-                 }
-
-                if(currObjectGenerated < 14){
-                    currObjectGenerated++;
-                }else{
-                    currObjectGenerated = 0;
+                    if(currentObjects[i].xPos < -250){
+                        currentObjects[i].generated = false;
+                    }
                 }
                 
-                lastObGeneratedX = player.xPos;
-
-                float randomDistance = 1250 * (Random.RandInt() / 32767.0) + 20;
-                currObGenerationDistance = randomDistance;
             }
 
-
+            // Draw obstacles
             for(int i = 0; i < 15; i++){
                 if(currentObstacles[i].generated){
                     currentObstacles[i].xPos -= moveSpeed;
@@ -636,19 +659,8 @@ int main()
 
             }
 
-            for(int i = 0; i < 15; i++){
-                if(currentObjects[i].generated){
-                    currentObjects[i].xPos -= moveSpeed;
-                    currentObjects[i].draw();
-
-                    if(currentObjects[i].xPos < -250){
-                        currentObjects[i].generated = false;
-                    }
-                }
-                
-            }
-
             // Check collisions
+
             // Check obstacles
             for(int i = 0; i < 15; i++){
                 if (currentObstacles[i].generated) {
@@ -893,6 +905,7 @@ int main()
         LCD.Update();
         // Never end
     }
+    
     return 0;
 }
 
