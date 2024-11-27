@@ -1,10 +1,29 @@
+// Authors: Hannah Hofferberth and Pierre van Zyl
+
 #include "FEHLCD.h"
 #include "FEHUtility.h"
 #include "FEHImages.h"
 #include "FEHRandom.h"
 #define JUMPSPEED 0.06
 
-// Class written by both Hannah and Pierre
+/* Class for buttons on the menu page
+
+Variables:
+- xPos and yPos describe the button's position
+- xSize and ySize describe the button's size
+- image and clickedImage are the images for the button
+- screenToInvoke is the screen to change to when button is clicked
+- clicked is whether or not the button has been clicked
+
+Functions:
+-  Constructor initializes the button and fills each field with info
+-  callScreen returns the screen associated with the button
+-  draw() draws the button and returns if it has been clicked
+-  draw(float, float) draws the button and checks if it's being clicked
+
+Written by both Hannah and Pierre
+*/
+
 class Button{
     private:
         float xPos;
@@ -36,7 +55,7 @@ class Button{
 
         // Overloaded method
         // Written by Hannah
-        // Returns true if it's being clicked, false if not. Draws button if not.
+        // Returns true if it has been clicked, false if not. Draws button if not.
         bool draw(){
                 if(!clicked){
                     image.Draw(xPos, yPos);
@@ -64,7 +83,23 @@ class Button{
 
 };
 
-// Class written by Hannah
+/* Class that describes the character
+
+Variables:
+- stressIndex is how many times the character has hit an obstacle
+- xPos is how far the character has moved
+- yPos is the character's y position
+- jumpIndex is a number denoting where the character is in its jump
+- colliding is an int denoting if a character has just collided and should thus have the red/green flash costume
+- image is the image associated with the character
+
+Functions:
+- changeCostume sets the image to the parameter
+- drawChar draws the character at its current position
+- transitionJump changes yPos based on the character's point in the jump
+
+Written by Hannah
+*/
 class Character{
     public:
         float stressIndex = 0;
@@ -72,16 +107,16 @@ class Character{
         float yPos = 85;
         int jumpIndex = 0;
         int colliding = 0;
-        FEHImage character;
+        FEHImage image;
 
         // Changes image of character to costume[]
         void changeCostume(char costume[]){
-            character.Open(costume);
+            image.Open(costume);
         }
 
         // Draws the character
         void drawChar(){
-            character.Draw(30, yPos);
+            image.Draw(30, yPos);
         }
 
         // Changes yPos based on the character's point in the jump. Ends jump if reached the ground.
@@ -108,7 +143,18 @@ class Character{
 
 };
 
-// Class written by Hannah
+/* Class that describes the ground
+
+Variables:
+- position is the current x position of the Ground
+- image is the image associated with the Ground
+
+Functions:
+- Constructor initializes the Ground with the correct image
+- drawGround draws the Ground at the current position
+
+Written by Hannah
+*/
 class Ground{
     public:
         float position;
@@ -127,7 +173,18 @@ class Ground{
 
 };
 
-// Class written by Hannah
+/* Class that describes the Background
+
+Variables:
+- position is the current x position of the Background
+- image is the image associated with the Background
+
+Functions:
+- Constructor initializes the Background with the correct image
+- drawGround draws the Background at the current position
+
+Written by Hannah
+*/
 class Background{
     public:
         float position;
@@ -146,7 +203,20 @@ class Background{
 
 };
 
-// Class written by Pierre
+/* Class that describes the obstacles (both good and bad)
+
+Variables:
+- xPos and yPos are position of obstacle
+- generated is a boolean describing whether or not the obstacle is visible and can collide
+- imageName is the name of the obstacle's image
+- image is the image that draws the obstacle
+
+Functions:
+- Constructor initializes the Obstacle with an arbitrary image
+- draw draws the obstacle at its current position
+
+Written by Pierre
+*/
 class Obstacle{
     public:
         float xPos;
@@ -168,29 +238,20 @@ class Obstacle{
         }
 };
 
-// Class written by Pierre
-class Object{
-    public:
-        float xPos;
-        float yPos;
-        bool generated = false;
-        char imageName[30] = "";
-        FEHImage image;
+/* Class that describes the jump bar
 
-        // Initializes object at point off screen with arbitrary image
-        Object(){
-            image.Open("objects/Heart.png");
-            xPos = 400;
-            yPos = 0;
-        }
+Variables:
+- totalX is the total width of bar
+- totalY is the height of the bar
+- innerX is the width of the blue bar
+- xPos and yPos are the position of the bar
 
-        // Draws object at current position
-        void draw(){
-            image.Draw(xPos, yPos);
-        }
-};
+Functions:
+- resetBar draws the bar when the screen is not being clicked
+- increaseBar draws the bar when the screen is being clicked
 
-// Class written by Hannah
+Written by Hannah
+*/
 class JumpBar{
     private:
         float totalX = 75;
@@ -247,8 +308,8 @@ void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
 }
 
 // Written by Pierre
-// Function for effects of collision with an object
-void collideObject(Object *hitObject, Character *hitPlayer, int *screen) {
+// Function for effects of collision with a good object
+void collideObject(Obstacle *hitObject, Character *hitPlayer, int *screen) {
     hitObject->generated = false;
     hitObject->xPos = -251;
     // Give stress back
@@ -269,7 +330,7 @@ void checkScore(float *score, float *maxScore){
     }        
 }
 
-
+// Main method
 // Written by both Hannah and Pierre
 int main()
 {
@@ -309,7 +370,7 @@ int main()
     currBackground[2].position = 600;
 
     Obstacle currentObstacles[15];
-    Object currentObjects[15];
+    Obstacle currentObjects[15]; // "Objects" refer to the good obstacles
     
     char objectImages[7][30] = {"objects/Bed.png", "objects/Heart.png","objects/Coffee.png","objects/Outside.png", "objects/Sports.png", "objects/Call.png", "objects/Journal.png"};
     char obstacleImages[12][30] = {"obstacles/AlarmClock.png",
@@ -560,7 +621,7 @@ int main()
                 currObstacleGenMax -= 0.03;
             }
 
-            // Generate objects
+            // Generate good objects
             if(player.xPos - lastObGeneratedX > currObGenerationDistance){ //If it's time for a new object to be generated
 
                 currentObjects[currObjectGenerated].xPos = 350;
@@ -765,7 +826,7 @@ int main()
                 }
             }
 
-            // check objects
+            // Check objects
             for (int i = 0; i < 15; i++) {
                 if (currentObjects[i].generated) {
                     if (strcmp(currentObjects[i].imageName, objectImages[0]) == 0) { // Bed
