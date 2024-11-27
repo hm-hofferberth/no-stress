@@ -291,8 +291,21 @@ class JumpBar{
 };
 
 
-// Written by Pierre
-// Function for effects of collision with an obstacle
+/* Function for effects of collision with an obstacle
+
+Inputs:
+- hitObstacle is pointer to the obstacle the player collided with
+- hitPlayer is pointer to the player
+- screen is pointer to the variable that controls the current displaying screen
+
+Outputs: 
+- Void method
+- What it does: makes obstacle disappear, increments stressIndex, tells player
+that it has just hit an obstacle and sets its costume to the red flash, ends game 
+if stress is too high
+
+Written by Pierre
+*/
 void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     hitObstacle->generated = false;
     hitObstacle->xPos = -251;
@@ -307,9 +320,20 @@ void collideObstacle(Obstacle *hitObstacle, Character *hitPlayer, int *screen) {
     }
 }
 
-// Written by Pierre
-// Function for effects of collision with a good object
-void collideObject(Obstacle *hitObject, Character *hitPlayer, int *screen) {
+/* Function for effects of collision with a good object
+
+Inputs:
+- hitObject is pointer to the object the player collided with
+- hitPlayer is pointer to the player
+
+Outputs: 
+- Void method
+- What it does: makes object disappear, tells player that it has just hit an object 
+and sets its costume to the green flash
+
+Written by Pierre
+*/
+void collideObject(Obstacle *hitObject, Character *hitPlayer) {
     hitObject->generated = false;
     hitObject->xPos = -251;
     // Give stress back
@@ -322,16 +346,29 @@ void collideObject(Obstacle *hitObject, Character *hitPlayer, int *screen) {
 }
 
 
-// Written by Hannah
-// Updates high score
+/* Function for updating the high score
+
+Inputs:
+- score is pointer to the current score
+- maxScore is pointer to the current high score
+
+Outputs: 
+- Void method
+- What it does: sets high score to current score if the current
+score is higher
+
+Written by Hannah
+*/
 void checkScore(float *score, float *maxScore){
     if(*score > *maxScore){
         *maxScore = *score;
     }        
 }
 
-// Main method
-// Written by both Hannah and Pierre
+/* Main method
+Purpose: Runs the game
+Written by both Hannah and Pierre
+*/
 int main()
 {
     // 1: menu, 2: stats, 3: credits, 4: instructions, 5: game, 6: game over
@@ -831,37 +868,37 @@ int main()
                 if (currentObjects[i].generated) {
                     if (strcmp(currentObjects[i].imageName, objectImages[0]) == 0) { // Bed
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 60 && player.yPos > 60) {
-                            collideObject(&currentObjects[i], &player, &screen);
+                            collideObject(&currentObjects[i], &player);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[1]) == 0) { // Heart can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            collideObject(&currentObjects[i], &player, &screen);
+                            collideObject(&currentObjects[i], &player);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[2]) == 0) { // Coffee can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            collideObject(&currentObjects[i], &player, &screen);
+                            collideObject(&currentObjects[i], &player);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[3]) == 0) { // Outside can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            collideObject(&currentObjects[i], &player, &screen);
+                            collideObject(&currentObjects[i], &player);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[4]) == 0) { // Sports can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            collideObject(&currentObjects[i], &player, &screen);
+                            collideObject(&currentObjects[i], &player);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[5]) == 0) { // Call can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            collideObject(&currentObjects[i], &player, &screen);
+                            collideObject(&currentObjects[i], &player);
                         }
                         
                     } else if (strcmp(currentObjects[i].imageName, objectImages[6]) == 0) { // Journal can have y
                         if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
-                            collideObject(&currentObjects[i], &player, &screen);
+                            collideObject(&currentObjects[i], &player);
                         }
                     }
                 }
@@ -975,4 +1012,3 @@ int main()
 
     return 0;
 }
-
