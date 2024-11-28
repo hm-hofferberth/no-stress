@@ -366,7 +366,7 @@ void checkScore(float *score, float *maxScore){
 }
 
 /* Main method
-Purpose: Runs the game
+Purpose: Runs the game; details in comments throughout
 Written by both Hannah and Pierre
 */
 int main()
@@ -380,6 +380,9 @@ int main()
     Button creditsButton("Buttons/sprite_4.png", "Buttons/sprite_5.png", 160, 190, 60, 25, 3);
     Button infoButton("Buttons/sprite_6.png", "Buttons/sprite_7.png", 160, 150, 60, 25, 4);
 
+    // Variables for info page
+    FEHImage instructions;
+    instructions.Open("info2.png");
 
     // Variables for the game
     Character player;
@@ -965,10 +968,12 @@ int main()
 
             // add text
             LCD.SetFontColor(DARKGREEN);
-            LCD.WriteAt("How to play:",85,20);
+            LCD.WriteAt("How to play:",85,10);
+
+            instructions.Draw(45, 40);
 
             LCD.SetFontColor(GREEN);
-            LCD.WriteAt("Click anywhere to return",10,210);
+            LCD.WriteAt("Click anywhere to return",10,215);
 
             float x_pos;
             float y_pos;
