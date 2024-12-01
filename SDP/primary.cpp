@@ -675,11 +675,11 @@ int main()
                 currentObjects[currObjectGenerated].generated = true;
                 
                 // Depending on which was generated, sets y-pos
-                 if(random == 1 || random == 2 || random == 3){
+                 if(random == 1 || random == 2){
                     currentObjects[currObjectGenerated].yPos = 100 * (Random.RandInt() / 32767.0) + 55;
                  }else if(random == 0){
                     currentObjects[currObjectGenerated].yPos = 120;
-                 }else if(random == 4 || random == 5|| random == 6 || random == 7){
+                 }else if(random == 3 || random == 4 || random == 5|| random == 6 || random == 7){
                     currentObjects[currObjectGenerated].yPos = 80 * (Random.RandInt() / 32767.0) + 35;
                  }
 
@@ -800,7 +800,7 @@ int main()
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[4]) == 0) { // books
-                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 70 && player.yPos > 40) {
+                        if (currentObstacles[i].xPos < 110 && currentObstacles[i].xPos > 50 && player.yPos > 40) {
                             collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
@@ -808,7 +808,7 @@ int main()
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[5]) == 0) { // Thunder can have y
-                        if (currentObstacles[i].xPos < 95 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
                             collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
@@ -848,7 +848,7 @@ int main()
                         }
 
                     } else if (strcmp(currentObstacles[i].imageName, obstacleImages[10]) == 0) { // Email can have y
-                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-100 && player.yPos < currentObstacles[i].yPos+0) {
+                        if (currentObstacles[i].xPos < 100 && currentObstacles[i].xPos > 50 && player.yPos > currentObstacles[i].yPos-90 && player.yPos < currentObstacles[i].yPos-10) {
                             collideObstacle(&currentObstacles[i], &player, &screen);
                             if(player.stressIndex > 5){
                                 checkScore(&score, &maxScore);
@@ -870,17 +870,17 @@ int main()
             for (int i = 0; i < 15; i++) {
                 if (currentObjects[i].generated) {
                     if (strcmp(currentObjects[i].imageName, objectImages[0]) == 0) { // Bed
-                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 60 && player.yPos > 60) {
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 30 && player.yPos > 60) {
                             collideObject(&currentObjects[i], &player);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[1]) == 0) { // Heart can have y
-                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-90 && player.yPos < currentObjects[i].yPos-10) {
                             collideObject(&currentObjects[i], &player);
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[2]) == 0) { // Coffee can have y
-                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-90 && player.yPos < currentObjects[i].yPos-10) {
                             collideObject(&currentObjects[i], &player);
                         }
 
@@ -890,7 +890,7 @@ int main()
                         }
 
                     } else if (strcmp(currentObjects[i].imageName, objectImages[4]) == 0) { // Sports can have y
-                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-100 && player.yPos < currentObjects[i].yPos+0) {
+                        if (currentObjects[i].xPos < 100 && currentObjects[i].xPos > 50 && player.yPos > currentObjects[i].yPos-90 && player.yPos < currentObjects[i].yPos-10) {
                             collideObject(&currentObjects[i], &player);
                         }
 
