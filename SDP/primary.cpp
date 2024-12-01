@@ -384,6 +384,10 @@ int main()
     FEHImage instructions;
     instructions.Open("info2.png");
 
+    // Variables for game over page
+    FEHImage reminder;
+    reminder.Open("EndReminder.png");
+
     // Variables for the game
     Character player;
     char crouches[6][35] = {"Char_crouch/sprite_0_crouch.png", "Char_crouch/sprite_2_crouch.png", "Char_crouch/sprite_4_crouch.png", "Char_crouch/sprite_6_crouch.png", "Char_crouch/sprite_8_crouch.png", "Char_crouch/sprite_10_crouch.png"};
@@ -425,12 +429,12 @@ int main()
     float lastGeneratedX = 100;
     float lastObGeneratedX = 200;
     float currGenerationDistance = 50;
-    float currObGenerationDistance = 1550;
+    float currObGenerationDistance = 500;
     float currObstacleGenMax = 390;
 
     float timeHeld = 0;
     float moveSpeed = 0;
-    int jumpLevel = 50;
+    int jumpLevel = 0;
 
     bool resetTime = false;
 
@@ -448,12 +452,12 @@ int main()
             lastGeneratedX = 100;
             lastObGeneratedX = 200;
             currGenerationDistance = 50;
-            currObGenerationDistance = 1550;
+            currObGenerationDistance = 500;
             currObstacleGenMax = 390;
 
             timeHeld = 0;
             moveSpeed = 0;
-            jumpLevel = 50;
+            jumpLevel = 0;
 
             currGround[0].position = 0;
             currGround[1].position = 300;
@@ -501,6 +505,7 @@ int main()
             float x_pos;
             float y_pos;
 
+            // Draw buttons and detect if they were clicked
             if(LCD.Touch(&x_pos, &y_pos,false) && moveSpeed == 0){
                 startButton.draw(x_pos, y_pos);
                 infoButton.draw(x_pos, y_pos);
@@ -938,7 +943,7 @@ int main()
             LCD.SetFontColor(LIGHTGOLDENRODYELLOW);
             LCD.FillRectangle(0,0,319,239);
 
-            // add text
+            // Text
             LCD.SetFontColor(BROWN);
             LCD.WriteAt("An Escaping",100,20);
             LCD.WriteAt("Meatball Production",50,35);
@@ -966,10 +971,11 @@ int main()
             LCD.SetFontColor(LIGHTGREEN);
             LCD.FillRectangle(0,0,319,239);
 
-            // add text
+            // Text
             LCD.SetFontColor(DARKGREEN);
             LCD.WriteAt("How to play:",85,10);
 
+            // Actual instructions
             instructions.Draw(45, 40);
 
             LCD.SetFontColor(GREEN);
@@ -988,13 +994,15 @@ int main()
             LCD.SetFontColor(DARKRED);
             LCD.FillRectangle(0,0,319,239);
 
-            // add text
+            // Text
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("Game Over!",100,20);
             LCD.WriteAt("Score: " ,70,50);
             LCD.WriteAt((int)score/100 ,200,50);
-            LCD.WriteAt("High Score: " ,55,85);
-            LCD.WriteAt((int)maxScore/100 ,205,85);
+            LCD.WriteAt("High Score: " ,55,82);
+            LCD.WriteAt((int)maxScore/100 ,205,82);
+
+            reminder.Draw(20, 130);
 
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("Click to return to menu",15,210);
